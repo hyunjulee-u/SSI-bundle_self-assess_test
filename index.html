@@ -837,113 +837,77 @@
 
   <!--
     드레싱 흐름 체크 (4단계)
-    이미지: images/img_dressing_flow.png (650×1157, 4컷 세로 배열)
-    각 컷 높이 ≈ 289px → CSS object-position으로 crop
+    이미지 1개(전체) + 오른쪽 흐름표
+    이미지 원본: 650×1157, 4컷 각 25% 간격
+    흐름표 행 높이를 이미지 구분선(25%씩)에 맞춤
   -->
-  <div style="display:flex;flex-direction:column;gap:0">
+  <div style="display:flex;align-items:stretch;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--white)">
 
-    <!-- ① 드레싱 위해 환자 접촉 전 -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-      <div style="display:flex;align-items:stretch">
-        <!-- 이미지: 컷 1 (y 0~289 / 1157 = 0%~24.97%) -->
-        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
-          <img src="images/img_dressing_flow.png" alt="① 드레싱 위해 환자 접촉 전"
-               style="width:100%;height:160px;object-fit:cover;object-position:center 0%;display:block">
-        </div>
-        <!-- 텍스트+체크박스 -->
-        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
-          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">① 드레싱 위해<br>환자 접촉 전</div>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="hh-1"><span class="fc-box"></span>손위생을 한다
-          </label>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="gl-1"><span class="fc-box"></span>장갑을 착용한다
-          </label>
-        </div>
-      </div>
+    <!-- 왼쪽: 이미지 전체 1장 -->
+    <div style="flex-shrink:0;width:46%;position:relative">
+      <img src="images/img_dressing_flow.png"
+           alt="드레싱 흐름"
+           style="width:100%;height:100%;object-fit:cover;display:block">
     </div>
 
-    <!-- 화살표 -->
-    <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-        <div style="width:2px;height:14px;background:var(--teal)"></div>
-        <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal)"></div>
-      </div>
-    </div>
+    <!-- 오른쪽: 흐름표 — 4행, 각 25% 높이 -->
+    <div style="flex:1;display:flex;flex-direction:column">
 
-    <!-- ② 기존 드레싱을 제거 하기 전 -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-      <div style="display:flex;align-items:stretch">
-        <!-- 이미지: 컷 2 (y 289~578 / 1157 → object-position 25%) -->
-        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
-          <img src="images/img_dressing_flow.png" alt="② 기존 드레싱을 제거 하기 전"
-               style="width:100%;height:160px;object-fit:cover;object-position:center 24.97%;display:block">
-        </div>
-        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
-          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">② 기존 드레싱을<br>제거 하기 전</div>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="hh-2"><span class="fc-box"></span>손위생을 한다
-          </label>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="gl-2"><span class="fc-box"></span>장갑을 착용한다
-          </label>
-        </div>
+      <!-- ① -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px;line-height:1.4">① 드레싱 위해<br>환자 접촉 전</div>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800);margin-bottom:6px">
+          <input type="checkbox" data-key="hh-1"><span class="fc-box"></span>손위생을 한다
+        </label>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800)">
+          <input type="checkbox" data-key="gl-1"><span class="fc-box"></span>장갑을 착용한다
+        </label>
       </div>
-    </div>
 
-    <!-- 화살표 -->
-    <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-        <div style="width:2px;height:14px;background:var(--teal)"></div>
-        <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal)"></div>
+      <!-- 화살표 구분선 대신 border-bottom으로 구분, 화살표 아이콘 -->
+      <div style="display:flex;align-items:center;justify-content:flex-start;padding:0 14px;height:22px;background:#F9FDFD;flex-shrink:0;border-bottom:1px solid var(--border)">
+        <span style="font-size:12px;color:var(--teal);font-weight:700">↓</span>
       </div>
-    </div>
 
-    <!-- ③ 새롭게 무균적 드레싱을 시행하기 전 -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-      <div style="display:flex;align-items:stretch">
-        <!-- 이미지: 컷 3 (y 578~867 / 1157 → object-position 49.96%) -->
-        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
-          <img src="images/img_dressing_flow.png" alt="③ 새롭게 무균적 드레싱을 시행하기 전"
-               style="width:100%;height:160px;object-fit:cover;object-position:center 49.96%;display:block">
-        </div>
-        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
-          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">③ 새롭게 무균적<br>드레싱을 시행하기 전</div>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="hh-3"><span class="fc-box"></span>손위생을 한다
-          </label>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="gl-3"><span class="fc-box"></span>멸균 장갑을 착용한다
-          </label>
-        </div>
+      <!-- ② -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px;line-height:1.4">② 기존 드레싱을<br>제거 하기 전</div>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800);margin-bottom:6px">
+          <input type="checkbox" data-key="hh-2"><span class="fc-box"></span>손위생을 한다
+        </label>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800)">
+          <input type="checkbox" data-key="gl-2"><span class="fc-box"></span>장갑을 착용한다
+        </label>
       </div>
-    </div>
 
-    <!-- 화살표 -->
-    <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-        <div style="width:2px;height:14px;background:var(--teal)"></div>
-        <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal)"></div>
+      <div style="display:flex;align-items:center;justify-content:flex-start;padding:0 14px;height:22px;background:#F9FDFD;flex-shrink:0;border-bottom:1px solid var(--border)">
+        <span style="font-size:12px;color:var(--teal);font-weight:700">↓</span>
       </div>
-    </div>
 
-    <!-- ④ 드레싱을 한 뒤 환자 침상을 떠나기 전 -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-      <div style="display:flex;align-items:stretch">
-        <!-- 이미지: 컷 4 (y 867~1157 / 1157 → object-position 100%) -->
-        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
-          <img src="images/img_dressing_flow.png" alt="④ 드레싱을 한 뒤 환자 침상을 떠나기 전"
-               style="width:100%;height:160px;object-fit:cover;object-position:center 100%;display:block">
-        </div>
-        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
-          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">④ 드레싱을 한 뒤<br>환자 침상을 떠나기 전</div>
-          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
-            <input type="checkbox" data-key="hh-4"><span class="fc-box"></span>손위생을 한다
-          </label>
-        </div>
+      <!-- ③ -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px;line-height:1.4">③ 새롭게 무균적<br>드레싱을 시행하기 전</div>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800);margin-bottom:6px">
+          <input type="checkbox" data-key="hh-3"><span class="fc-box"></span>손위생을 한다
+        </label>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800)">
+          <input type="checkbox" data-key="gl-3"><span class="fc-box"></span>멸균 장갑을 착용한다
+        </label>
       </div>
-    </div>
 
+      <div style="display:flex;align-items:center;justify-content:flex-start;padding:0 14px;height:22px;background:#F9FDFD;flex-shrink:0;border-bottom:1px solid var(--border)">
+        <span style="font-size:12px;color:var(--teal);font-weight:700">↓</span>
+      </div>
+
+      <!-- ④ -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 14px">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:8px;line-height:1.4">④ 드레싱을 한 뒤<br>환자 침상을 떠나기 전</div>
+        <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--gray-800)">
+          <input type="checkbox" data-key="hh-4"><span class="fc-box"></span>손위생을 한다
+        </label>
+      </div>
+
+    </div>
   </div>
 
   <div class="nav-row">
