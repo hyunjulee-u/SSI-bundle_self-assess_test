@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSI 예방 술기 자가평가 | 감염관리실</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0A2342;
+    --teal:#1B7F79;
+    --teal-light:#E6F4F3;
+    --teal-mid:#A8D8D5;
+    --amber:#E07B39;
+    --amber-light:#FDF0E8;
+    --gray-50:#F8F9FA;
+    --gray-100:#F1F3F5;
+    --gray-200:#E9ECEF;
+    --gray-400:#ADB5BD;
+    --gray-600:#6C757D;
+    --gray-800:#343A40;
+    --red:#C0392B;
+    --red-light:#FDECEA;
+    --green:#1A7F5A;
+    --green-light:#E6F5EF;
+    --white:#FFFFFF;
+    --border:#DEE2E6;
+  }
+  body{
+    font-family:'Noto Sans KR',sans-serif;
+    background:var(--gray-50);
+    color:var(--gray-800);
+    min-height:100vh;
+    font-size:15px;
+    line-height:1.7;
+  }
+
+  /* ── Layout ── */
+  .app-shell{max-width:760px;margin:0 auto;padding:0 16px 80px}
+
+  /* ── Header ── */
+  .site-header{
+    background:var(--navy);
+    color:#fff;
+    padding:14px 24px;
+    display:flex;align-items:center;gap:12px;
+    position:sticky;top:0;z-index:100;
+  }
+  .site-header .logo{
+    font-size:12px;font-weight:500;letter-spacing:.06em;opacity:.7;
+  }
+  .site-header .title{font-size:15px;font-weight:700;letter-spacing:.03em}
+  .header-right{margin-left:auto;font-size:12px;opacity:.6}
+
+  /* ── Progress ── */
+  .progress-wrap{
+    background:var(--white);
+    border-bottom:1px solid var(--border);
+    padding:10px 24px 0;
+    position:sticky;top:48px;z-index:99;
+  }
+  .step-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+  .step-tabs::-webkit-scrollbar{display:none}
+  .step-tab{
+    flex:0 0 auto;
+    padding:6px 14px 10px;
+    font-size:12px;
+    color:var(--gray-400);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:all .2s;
+  }
+  .step-tab.active{color:var(--teal);border-bottom-color:var(--teal);font-weight:500}
+  .step-tab.done{color:var(--gray-600)}
+  .step-tab.done::before{content:'✓ ';color:var(--teal)}
+  .step-tab.sub-tab{
+    font-size:11px;
+    color:var(--gray-400);
+    padding-left:10px;
+    background:var(--gray-50);
+    border-bottom:2px solid transparent;
+  }
+  .step-tab.sub-tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+  .step-tab.sub-tab.done{color:var(--gray-500)}
+  .step-tab.sub-tab.done::before{content:'✓ ';color:var(--amber)}
+
+  /* ── Pages ── */
+  .page{display:none;padding-top:28px}
+  .page.active{display:block}
+
+  /* ── Section label ── */
+  .eyebrow{
+    font-size:11px;font-weight:700;letter-spacing:.1em;
+    color:var(--teal);text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .page-title{
+    font-size:24px;font-weight:700;color:var(--navy);
+    line-height:1.3;margin-bottom:8px;
+  }
+  .page-subtitle{font-size:14px;color:var(--gray-600);margin-bottom:28px;line-height:1.6}
+
+  /* ── Cards ── */
+  .card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 24px;
+    margin-bottom:16px;
+  }
+  .card-title{
+    font-size:14px;font-weight:700;color:var(--navy);
+    margin-bottom:14px;display:flex;align-items:center;gap:8px;
+  }
+  .card-title .num{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--teal);color:#fff;
+    font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+
+  /* ── Form elements ── */
+  .option-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt-btn{
+    display:flex;align-items:center;gap:7px;
+    padding:9px 16px;
+    border:1.5px solid var(--border);
+    border-radius:8px;background:var(--white);
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:13px;color:var(--gray-800);
+    cursor:pointer;transition:all .15s;
+  }
+  .opt-btn:hover{border-color:var(--teal);background:var(--teal-light)}
+  .opt-btn.selected{border-color:var(--teal);background:var(--teal-light);color:var(--teal);font-weight:500}
+  .opt-btn .dot{
+    width:14px;height:14px;border-radius:50%;
+    border:1.5px solid currentColor;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .opt-btn.selected .dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal)}
+
+  .check-btn{border-radius:6px}
+  .check-btn.selected .dot{border-radius:3px}
+  .check-btn.selected .dot::after{content:'✓';font-size:9px;font-weight:700;width:auto;height:auto;background:none}
+
+  label.field-label{
+    display:block;font-size:13px;font-weight:500;
+    color:var(--gray-600);margin-bottom:6px;margin-top:14px;
+  }
+  input[type=number],input[type=text],select{
+    width:100%;padding:9px 12px;
+    border:1.5px solid var(--border);border-radius:8px;
+    font-family:'Noto Sans KR',sans-serif;font-size:14px;
+    color:var(--gray-800);background:var(--white);
+    outline:none;transition:border-color .15s;
+  }
+  input[type=number]:focus,input[type=text]:focus,select:focus{border-color:var(--teal)}
+  input[type=number]{width:80px}
+
+  .inline-field{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .inline-field span{font-size:13px;color:var(--gray-600)}
+
+  /* ── Page 1: SSI Bundle ── */
+  /* ── 번들 카드 ── */
+  .bundle-card{
+    display:flex;align-items:flex-start;gap:10px;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:8px;
+    position:relative;
+  }
+  .bc-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--gray-100);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;flex-shrink:0;
+  }
+  .bc-title{
+    font-size:13px;font-weight:700;color:var(--navy);
+    margin-bottom:3px;line-height:1.4;
+  }
+  .bc-desc{
+    font-size:12px;color:var(--gray-600);line-height:1.6;
+  }
+  .bc-tag{
+    flex-shrink:0;font-size:10px;font-weight:700;
+    padding:3px 8px;border-radius:20px;
+    white-space:nowrap;align-self:flex-start;margin-top:2px;
+    margin-left:auto;
+  }
+  .bc-tag.gray{background:var(--gray-200);color:var(--gray-600)}
+
+  /* SHEA 권고 수준 배지 */
+  .shea-badge{
+    flex-shrink:0;font-size:10px;font-weight:700;
+    padding:3px 7px;border-radius:20px;
+    white-space:nowrap;align-self:flex-start;margin-top:2px;
+    margin-left:auto;letter-spacing:.02em;
+  }
+  .shea-badge.ia{background:#0A2342;color:#fff}
+  .shea-badge.ib{background:#1B7F79;color:#fff}
+  .shea-badge.ii{background:#E07B39;color:#fff}
+  .shea-badge.ur{background:#ADB5BD;color:#fff}
+  .bc-body{flex:1;min-width:0}
+  .info-box{
+    background:var(--amber-light);border:1px solid #F5C9A5;
+    border-radius:10px;padding:14px 16px;margin-top:16px;
+    font-size:13px;color:#7A4010;line-height:1.6;
+  }
+  .info-box strong{font-weight:700}
+
+  /* ── Arm diagram (Page 3) ── */
+  .arm-diagram{
+    display:flex;flex-direction:column;align-items:center;
+    gap:0;margin:10px 0;
+  }
+  .arm-zone{
+    display:flex;align-items:center;gap:10px;
+    padding:0 12px;
+    width:100%;
+    background:var(--white);
+    cursor:pointer;transition:background .15s;
+  }
+  .arm-zone:hover{background:var(--teal-light)}
+  .arm-zone.checked{background:var(--teal-light)}
+  .arm-zone .zone-box{
+    width:16px;height:16px;border-radius:3px;
+    border:1.5px solid var(--gray-400);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;font-size:11px;font-weight:700;
+    color:var(--white);transition:all .15s;background:var(--white);
+  }
+  .arm-zone.checked .zone-box{
+    background:var(--teal);border-color:var(--teal);
+  }
+  .arm-zone .zone-label{font-size:14px;color:var(--gray-800)}
+  .arm-zone .zone-range{font-size:11px;color:var(--gray-400);margin-left:auto}
+  .arm-visual{
+    display:flex;flex-direction:column;align-items:center;
+    padding:8px 0;
+  }
+
+  /* ── SVG arm illustration ── */
+  .arm-svg-wrap{margin:8px auto 4px;display:flex;justify-content:center}
+
+  /* ── 드레싱 흐름 체크박스 ── */
+  .flow-check{
+    display:inline-flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .flow-check input[type=checkbox]{display:none}
+  .fc-box{
+    width:22px;height:22px;border-radius:5px;
+    border:1.5px solid var(--gray-400);
+    background:var(--white);
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;color:var(--white);
+    transition:all .15s;
+  }
+  .flow-check input:checked + .fc-box{
+    background:var(--teal);border-color:var(--teal);
+  }
+  .flow-check input:checked + .fc-box::after{
+    content:'✓';
+  }
+  .flow-row:hover{background:var(--teal-light)!important}
+
+  /* 업무 흐름 태스크 블록 */
+  .flow-task{
+    padding:14px 16px;
+    border-bottom:1px solid var(--gray-100);
+    background:var(--white);
+  }
+  .flow-task-label{
+    font-size:13px;font-weight:600;color:var(--navy);
+  }
+
+  /* 항목 사이 체크행 */
+  .flow-check-row{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:0;
+    background:var(--gray-50);
+    border-bottom:1px solid var(--gray-100);
+    padding:10px 0;
+  }
+  .flow-check-line{
+    height:1px;
+    background:var(--teal-mid);
+    opacity:.5;
+  }
+  .flow-check-mid{
+    padding:0 20px;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .dry-time-row{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;
+  }
+  .dry-card{
+    text-align:center;padding:16px 10px;
+    border-radius:10px;border:1.5px solid var(--border);
+    transition:all .15s;cursor:pointer;
+  }
+  .dry-card:hover,.dry-card.active{border-color:var(--teal);background:var(--teal-light)}
+  .dry-card .dc-name{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px}
+  .dry-card .dc-time{font-size:20px;font-weight:700;color:var(--teal);margin-bottom:4px}
+  .dry-card .dc-note{font-size:10px;color:var(--gray-600)}
+
+  /* ── Hand hygiene timeline (Page 6) ── */
+  .hh-timeline{margin-top:16px}
+  .hh-step{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:12px 0;border-bottom:1px solid var(--gray-100);
+  }
+  .hh-step:last-child{border-bottom:none}
+  .hh-num{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--gray-100);color:var(--gray-600);
+    font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .hh-step.should-do .hh-num{background:var(--teal);color:#fff}
+  .hh-step .hh-text{font-size:13px;color:var(--gray-800);padding-top:4px;line-height:1.5}
+  .hh-step .hh-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+  .moment-check{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .moment-btn{
+    padding:7px 14px;border-radius:20px;
+    border:1.5px solid var(--border);background:var(--white);
+    font-size:12px;color:var(--gray-600);cursor:pointer;
+    transition:all .15s;
+  }
+  .moment-btn:hover{border-color:var(--teal)}
+  .moment-btn.selected{
+    border-color:var(--teal);background:var(--teal);color:#fff;font-weight:500;
+  }
+
+  /* ── Result page ── */
+  .result-score-row{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:10px;margin-bottom:20px;
+  }
+  .score-card{
+    text-align:center;padding:16px 10px;
+    border-radius:10px;border:1px solid var(--border);
+    background:var(--white);
+  }
+  .score-card .sc-domain{font-size:11px;color:var(--gray-600);margin-bottom:6px}
+  .score-card .sc-val{font-size:22px;font-weight:700}
+  .score-card.good .sc-val{color:var(--green)}
+  .score-card.warn .sc-val{color:var(--amber)}
+  .score-card.bad .sc-val{color:var(--red)}
+  .result-bar-wrap{height:6px;background:var(--gray-100);border-radius:3px;margin-top:6px}
+  .result-bar{height:6px;border-radius:3px}
+
+  .feedback-section{margin-top:24px}
+  .fb-item{
+    display:flex;gap:14px;
+    background:var(--white);border:1px solid var(--border);
+    border-radius:10px;padding:16px 18px;margin-bottom:10px;
+  }
+  .fb-icon{
+    width:36px;height:36px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;flex-shrink:0;
+  }
+  .fb-icon.ok{background:var(--green-light)}
+  .fb-icon.warn{background:var(--amber-light)}
+  .fb-icon.bad{background:var(--red-light)}
+  .fb-content .fb-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+  .fb-content .fb-desc{font-size:13px;color:var(--gray-600);line-height:1.6}
+  .fb-content .fb-evidence{
+    font-size:11px;color:var(--teal);margin-top:6px;
+    padding:4px 10px;background:var(--teal-light);
+    border-radius:4px;display:inline-block;
+  }
+
+  .standard-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;
+  }
+  .std-card{
+    background:var(--navy);color:#fff;
+    border-radius:10px;padding:16px;
+  }
+  .std-card .std-title{font-size:12px;font-weight:700;opacity:.6;margin-bottom:8px;letter-spacing:.05em}
+  .std-card .std-body{font-size:13px;line-height:1.7;opacity:.9}
+  .std-card .std-body li{margin-left:16px;margin-bottom:3px}
+
+  /* ai-thinking, ai-result, score-row: 규칙 기반 피드백으로 대체됨 */
+  .dot3 span{animation:blink .8s infinite;display:inline-block}
+  .dot3 span:nth-child(2){animation-delay:.2s}
+  .dot3 span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%{opacity:0}40%{opacity:1}}
+
+  /* ── Nav buttons ── */
+  .nav-row{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:28px;padding-top:20px;border-top:1px solid var(--gray-100);
+  }
+  .btn{
+    padding:11px 24px;border-radius:8px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:14px;font-weight:500;cursor:pointer;
+    transition:all .15s;border:none;
+  }
+  .btn-ghost{
+    background:transparent;border:1.5px solid var(--border);
+    color:var(--gray-600);
+  }
+  .btn-ghost:hover{border-color:var(--gray-400);background:var(--gray-50)}
+  .btn-primary{
+    background:var(--teal);color:#fff;
+    box-shadow:0 2px 8px rgba(27,127,121,.25);
+  }
+  .btn-primary:hover{background:#155f5a;box-shadow:0 4px 14px rgba(27,127,121,.3)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+
+  @media(max-width:500px){
+    .standard-grid{grid-template-columns:1fr}
+    .dry-time-row{grid-template-columns:1fr 1fr}
+    .page-title{font-size:20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="logo">감염관리실</div>
+    <div class="title">SSI 예방 술기 자가평가</div>
+  </div>
+  <div class="header-right" id="hdr-step">1 / 7</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="step-tabs" id="step-tabs">
+    <div class="step-tab active" onclick="goPage(0)">SSI 번들</div>
+    <div class="step-tab" onclick="goPage(1)">참여자 정보</div>
+    <div class="step-tab" onclick="goPage(2)">외과적 손소독(스크럽)</div>
+    <div class="step-tab" onclick="goPage(3)">외과적 손소독(알코올럽)</div>
+    <div class="step-tab" onclick="goPage(4)">드레싱</div>
+    <div class="step-tab" onclick="goPage(5)">결과</div>
+  </div>
+</div>
+
+<div class="app-shell">
+
+<!-- ═══════════════════════════════════════════
+     PAGE 0: SSI Bundle
+════════════════════════════════════════════ -->
+<div class="page active" id="page-0">
+  <div class="eyebrow">맞춤형 감염관리 컨설팅</div>
+  <h1 class="page-title" style="font-size:17px;line-height:1.5">수술부위 감염 (SSI; Surgical Site Infection)<br>예방 번들 자가평가 — 맞춤형 감염관리 컨설팅</h1>
+
+  <div style="background:var(--teal-light);border:1px solid var(--teal-mid);border-radius:12px;padding:16px 18px;margin:14px 0 12px;line-height:1.85;font-size:13.5px;color:#1a4040">
+    안녕하십니까? 수술부위 감염 예방을 위해 본원에서는 근거 기반 중재활동의 모음인 번들 형태의 중재활동을 진행하고 있습니다. 선생님의 술기를 자가평가해보고 강화 포인트를 확인해 볼 수 있는 페이지로, 아래 핵심 전략을 먼저 확인하신 후 자가평가를 시작해 주세요.
+  </div>
+
+  <div class="info-box" style="margin:0 0 20px">
+    <strong>평가 범위</strong> — 여러가지 번들 항목 중 직접 술기를 시행하게 되는 외과적 손소독, 수술 후 드레싱 관리에 대한 항목을 점검합니다. 솔직하게 응답해주실수록 실질적인 피드백을 받으실 수 있습니다. 시간은 약 5분 정도 소요 예상됩니다.
+  </div>
+
+  <div style="position:relative;padding-left:28px">
+    <div style="position:absolute;left:9px;top:12px;bottom:12px;width:2px;background:var(--gray-200);border-radius:2px"></div>
+
+    <!-- ── 수술 전 ── -->
+    <div style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="position:absolute;left:0;width:20px;height:20px;border-radius:50%;background:var(--teal);border:2px solid #fff;box-shadow:0 0 0 2px var(--teal);display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;border-radius:50%;background:#fff"></div></div>
+        <div style="font-size:15px;font-weight:800;color:var(--teal)">가이드라인 권고사항 기반 SSI 예방 핵심 전략</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px;padding:4px 0;border-bottom:1.5px solid var(--teal-mid)">수술 전 (Preoperative)</div>
+    </div>
+
+    <div class="bundle-card"><div class="bc-icon">🌡️</div><div class="bc-body"><div class="bc-title">체온 유지</div><div class="bc-desc">수술 전·후 정상 체온을 유지한다. (의도적 저체온 유발 제외)</div></div></div>
+    <div class="bundle-card"><div class="bc-icon">🍬</div><div class="bc-body"><div class="bc-title">혈당 조절</div><div class="bc-desc">수술 전후 고혈당상태(&gt;200mg/dL)가 되지 않도록 관리한다.</div></div></div>
+    <div class="bundle-card"><div class="bc-icon">🚭</div><div class="bc-body"><div class="bc-title">금연</div><div class="bc-desc">계획된 수술은 30일 전 또는 수술 결정 시점부터 금연하도록 교육한다.</div></div></div>
+    <div class="bundle-card"><div class="bc-icon">🛁</div><div class="bc-body"><div class="bc-title">제균요법 <span style="font-size:11px;font-weight:400;color:var(--gray-600)">(정형외과 일부 및 심장 수술 전체)</span></div><div class="bc-desc">수술 전 일반비누 혹은 항균비누를 이용하여 샤워한다. 고위험 환자는 클로르헥시딘 전신 샤워 및 S. aureus 제균을 시행한다.</div></div></div>
+    <div class="bundle-card"><div class="bc-icon">✂️</div><div class="bc-body"><div class="bc-title">제모</div><div class="bc-desc">제모가 필요한 경우 일회용 클리퍼나 제모 크림을 이용한다.</div></div></div>
+    <div class="bundle-card"><div class="bc-icon">💊</div><div class="bc-body"><div class="bc-title">예방적 항생제 적정 투여</div><div class="bc-desc">피부 절개 1시간 이내에 투여한다. (Vancomycin, Quinolone 계열은 2시간 이내 투여)</div></div></div>
+
+    <!-- ── 수술 중 ── -->
+    <div style="margin:14px 0 8px">
+      <div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:8px;padding:4px 0;border-bottom:1.5px solid #F5C9A5">수술 중 (Intraoperative)</div>
+    </div>
+
+    <div class="bundle-card"><div class="bc-icon">🩺</div><div class="bc-body"><div class="bc-title">피부 소독</div><div class="bc-desc">수술부위 피부 소독을 위해 Chlorhexidine-alcohol(헥시알액 2%)을 사용한다. 헥시알을 사용할 수 없는 경우 Povidone iodine을 사용한다.<br><span style="display:inline-block;margin-top:5px;padding:4px 8px;background:var(--teal-light);border-radius:5px;font-size:12px;color:var(--teal)">⏱️ 건조 — 소독제를 예상 절개 부위보다 광범위하게 도포 후 충분히 건조시킨다. (헥시알: 30초 이상, 베타딘: 2분 이상)</span></div></div></div>
+    <div class="bundle-card"><div class="bc-icon">💊</div><div class="bc-body"><div class="bc-title">예방적 항생제 적시 투여</div><div class="bc-desc">예방적 항생제는 피부 절개 전 1시간 이내에 투여한다.</div></div></div>
+    <div class="bundle-card" style="border-color:var(--amber);background:#FFFBF7"><div class="bc-icon" style="background:var(--amber-light)">🧤</div><div class="bc-body"><div class="bc-title" style="font-weight:800">외과적 손소독</div><div class="bc-desc">수술에 참여하는 의료진은 수술 전 적절한 방법과 제재로 외과적 손소독을 시행한다.</div></div></div>
+    <div class="bundle-card"><div class="bc-icon">🫁</div><div class="bc-body"><div class="bc-title">산소 공급</div><div class="bc-desc">전신마취하 기관삽관 상태에서 수술 받은 성인 환자는 수술 중 충분한 산소를 공급한다.</div></div></div>
+
+    <!-- ── 수술 후 ── -->
+    <div style="margin:14px 0 8px">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;padding:4px 0;border-bottom:1.5px solid #A8D8C0">수술 후 (Postoperative)</div>
+    </div>
+
+    <div class="bundle-card" style="border-color:var(--green);background:#F0FAF5"><div class="bc-icon" style="background:var(--green-light)">🩹</div><div class="bc-body"><div class="bc-title" style="font-weight:800">안전한 드레싱 유지</div><div class="bc-desc">수술부위 드레싱 시 무균술기를 준수한다. 소독제 건조시간 준수 필요 (헥시알: 30초 이상, 베타딘: 2분 이상)</div></div></div>
+
+  </div>
+
+  <div class="nav-row" style="justify-content:flex-end;margin-top:24px">
+    <button class="btn btn-primary" onclick="goPage(1)">다음 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 1: 참여자 정보
+════════════════════════════════════════════ -->
+<div class="page" id="page-1">
+  <div class="eyebrow">시작 전 확인</div>
+  <h1 class="page-title">참여자 정보를<br>입력해 주세요</h1>
+  <p class="page-subtitle">입력하신 정보는 술기 자가평가 목적으로만 사용되며,<br>외부 공개 및 인사 자료로 활용되지 않습니다.</p>
+
+  <div class="card">
+    <div class="card-title"><span class="num">1</span>사번</div>
+    <input type="text" id="user-id" placeholder="사번을 입력하세요 (예: D260123)" maxlength="20" style="width:100%">
+    <div style="font-size:11px;color:var(--gray-400);margin-top:6px">* 개인 피드백 연계에 사용됩니다</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">2</span>소속 과</div>
+    <p style="font-size:12px;color:var(--gray-600);margin-bottom:10px">외과의 경우 작성일 기준 세부 분과 소속을 입력해 주세요</p>
+    <div class="option-group" id="dept-group" style="flex-direction:column">
+      <button class="opt-btn" data-val="colorectal" onclick="selectOpt(this,'dept-group','colorectal')"><span class="dot"></span>대장항문외과</button>
+      <button class="opt-btn" data-val="ns" onclick="selectOpt(this,'dept-group','ns')"><span class="dot"></span>신경외과</button>
+      <button class="opt-btn" data-val="orthopedics" onclick="selectOpt(this,'dept-group','orthopedics')"><span class="dot"></span>정형외과</button>
+      <button class="opt-btn" data-val="cs" onclick="selectOpt(this,'dept-group','cs')"><span class="dot"></span>흉부외과</button>
+      <button class="opt-btn" data-val="other" onclick="selectOpt(this,'dept-group','other')"><span class="dot"></span>기타</button>
+    </div>
+    <input type="text" id="dept-other" placeholder="기타 과 직접 입력" style="display:none;margin-top:10px;width:100%">
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">3</span>직급</div>
+    <div class="option-group" id="rank-group" style="flex-wrap:wrap">
+      <button class="opt-btn" data-val="intern" onclick="selectOpt(this,'rank-group','intern')"><span class="dot"></span>인턴</button>
+      <button class="opt-btn" data-val="resident" onclick="selectOpt(this,'rank-group','resident')"><span class="dot"></span>레지던트</button>
+      <button class="opt-btn" data-val="fellow" onclick="selectOpt(this,'rank-group','fellow')"><span class="dot"></span>임상강사</button>
+      <button class="opt-btn" data-val="staff" onclick="selectOpt(this,'rank-group','staff')"><span class="dot"></span>임상교수</button>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <strong>개인정보 안내</strong> — 사번은 개인 피드백 연계에만 사용되며, 설문 결과는 익명 처리된 통계로만 사용됩니다.
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goPage(0)">← 이전</button>
+    <button class="btn btn-primary" onclick="validateAndStart()">다음 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 3: 스크럽 체크
+════════════════════════════════════════════ -->
+<div class="page" id="page-2">
+  <div class="eyebrow">스크럽 방법 점검</div>
+  <h1 class="page-title">스크럽, 어떻게<br>하고 계십니까?</h1>
+  <p class="page-subtitle">현재 본인의 방법을 그대로 체크해 주세요.</p>
+
+  <!-- 1·2·3번 항목 -->
+  <div class="card">
+    <div class="card-title"><span class="num">1</span>스크럽 평균 소요 시간</div>
+    <p style="font-size:12px;color:var(--gray-600);margin-bottom:8px">소독제로 문지르는 시간만 (물로 헹구는 시간 제외)</p>
+    <div class="inline-field">
+      <input type="number" id="scrub-time" min="0" max="10" step="0.5" placeholder="" style="width:70px">
+      <span>분</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">2</span>시간 측정 도구를 사용하시나요?</div>
+    <div class="option-group" id="timer-group" style="flex-direction:column">
+      <button class="opt-btn check-btn" data-val="touch" onclick="selectOpt(this,'timer-group','touch')"><span class="dot"></span>비접촉 타이머 사용</button>
+      <button class="opt-btn check-btn" data-val="sand" onclick="selectOpt(this,'timer-group','sand')"><span class="dot"></span>모래시계 사용</button>
+      <button class="opt-btn check-btn" data-val="no" onclick="selectOpt(this,'timer-group','no');toggleTimerReason(true)"><span class="dot"></span>사용하지 않음</button>
+    </div>
+  </div>
+
+  <div class="card" id="timer-reason-card" style="display:none">
+    <div class="card-title"><span class="num">3</span>시간 측정 도구를 사용하지 않는 이유가 무엇인가요?</div>
+    <div class="option-group" id="timer-reason-group" style="flex-direction:column">
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'timer-reason-group','unknown')"><span class="dot"></span>구비되어 있는 줄 몰랐음</button>
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'timer-reason-group','howto')"><span class="dot"></span>사용 방법 모름</button>
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'timer-reason-group','lazy')"><span class="dot"></span>사용하기 귀찮아서</button>
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'timer-reason-group','etc')"><span class="dot"></span>기타</button>
+    </div>
+  </div>
+
+
+  <!-- 4번: 팔 사진 + 체크박스 옆에 배치 -->
+  <div class="card">
+    <div class="card-title"><span class="num">4</span>스크럽 시행 범위 (해당 범위에 모두 체크)</div>
+    <div style="display:flex;gap:0;align-items:flex-start;margin-top:8px">
+
+      <!-- 팔 사진 + SVG 오버레이 -->
+      <div style="flex-shrink:0;position:relative;width:110px;margin-right:0">
+        <img src="images/img_01.png"
+             alt="팔 사진"
+             style="width:110px;height:330px;object-fit:cover;object-position:center;border-radius:10px 0 0 10px;display:block">
+        <svg width="110" height="330" viewBox="0 0 110 330"
+             xmlns="http://www.w3.org/2000/svg"
+             style="position:absolute;top:0;left:0;pointer-events:none;border-radius:10px 0 0 10px;overflow:hidden">
+          <rect x="0" y="0"   width="110" height="46"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-elbow-above"/>
+          <rect x="0" y="46"  width="110" height="44"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-elbow"/>
+          <rect x="0" y="90"  width="110" height="58"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-forearm-upper"/>
+          <rect x="0" y="148" width="110" height="56"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-forearm-lower"/>
+          <rect x="0" y="204" width="110" height="30"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-wrist"/>
+          <rect x="0" y="234" width="110" height="58"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-palm"/>
+          <rect x="0" y="292" width="110" height="38"  fill="rgba(0,0,0,0)"  stroke="rgba(255,255,255,0.15)" stroke-width="1" id="ov-finger"/>
+        </svg>
+      </div>
+
+      <!-- 체크박스 목록: 팔 사진 바로 옆 -->
+      <div id="arm-zones" style="display:flex;flex-direction:column;border:1px solid var(--border);border-radius:0 10px 10px 0;overflow:hidden;flex:1">
+        <div class="arm-zone" onclick="toggleZone(this,'elbow-above')" style="height:46px;border-bottom:1px solid var(--gray-100)">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">팔꿈치 위 5cm</span>
+        </div>
+        <div class="arm-zone" onclick="toggleZone(this,'elbow')" style="height:44px;border-bottom:1px solid var(--gray-100)">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">팔꿈치</span>
+        </div>
+        <div class="arm-zone" onclick="toggleZone(this,'forearm-upper')" style="height:58px;border-bottom:1px solid var(--gray-100)">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">전완 상부</span>
+        </div>
+        <div class="arm-zone" onclick="toggleZone(this,'forearm-lower')" style="height:56px;border-bottom:1px solid var(--gray-100)">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">전완 하부</span>
+        </div>
+        <div class="arm-zone" onclick="toggleZone(this,'wrist')" style="height:30px;border-bottom:1px solid var(--gray-100)">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">손목</span>
+        </div>
+        <div class="arm-zone" onclick="toggleZone(this,'palm')" style="height:58px;border-bottom:1px solid var(--gray-100)">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">손바닥·손등</span>
+        </div>
+        <div class="arm-zone" onclick="toggleZone(this,'finger')" style="height:38px">
+          <div class="zone-box"></div>
+          <span class="zone-label" style="font-size:13px">손가락 사이·끝</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goPage(1)">← 이전</button>
+    <button class="btn btn-primary" onclick="goPage(3)">다음 →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 4: 알코올럽 체크
+════════════════════════════════════════════ -->
+<div class="page" id="page-3">
+  <div class="eyebrow">알코올럽 방법 점검</div>
+  <h1 class="page-title">알코올럽, 어떻게<br>하고 계십니까?</h1>
+  <p class="page-subtitle">현재 본인의 방법을 그대로 선택해 주세요.</p>
+
+  <!-- 제품 이미지 행 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div class="card" style="padding:12px;display:flex;align-items:center;justify-content:center;background:var(--white)">
+      <img src="images/img_02.png"
+           alt="Softa-Man" style="width:100%;max-height:130px;object-fit:contain;border-radius:6px;display:block">
+    </div>
+    <div class="card" style="padding:12px;display:flex;align-items:center;justify-content:center;background:var(--white)">
+      <img src="images/img_03.png"
+           alt="Avagard Surgical" style="width:100%;max-height:130px;object-fit:contain;border-radius:6px;display:block">
+    </div>
+  </div>
+
+    <div class="card">
+    <div class="card-title"><span class="num">1</span>알코올럽 사용 전 물로 반드시 씻어내고 사용해야 되는 시점이라고 생각되는 항목을 모두 골라주세요</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px" id="prewash-group">
+      <button class="opt-btn check-btn" onclick="toggleMulti(this,'prewash')" data-val="first">
+        <span class="dot"></span>첫 번째 수술 시작 전
+      </button>
+      <button class="opt-btn check-btn" onclick="toggleMulti(this,'prewash')" data-val="contaminated">
+        <span class="dot"></span>손에 오염물이 있는 경우
+      </button>
+      <button class="opt-btn check-btn" onclick="toggleMulti(this,'prewash')" data-val="between">
+        <span class="dot"></span>수술 사이마다
+      </button>
+      <button class="opt-btn check-btn" onclick="toggleMulti(this,'prewash')" data-val="never">
+        <span class="dot"></span>알코올럽 전에 물 세척은 불필요
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">2</span>알코올럽을 이용한 외과적 손소독 시 전체 과정 중 펌핑하는 횟수</div>
+    <div class="inline-field">
+      <input type="number" id="pump-count" min="1" max="10" placeholder="">
+      <span>회</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">3</span>소독제 펌핑 후 손끝 담그기 시행 여부</div>
+    <div class="option-group" id="dip-group">
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'dip-group','yes')"><span class="dot"></span>시행한다</button>
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'dip-group','no')"><span class="dot"></span>시행하지 않는다</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">4</span>건조</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px" id="alc-dry-group">
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'alc-dry-group','full')"><span class="dot"></span>완전히 마를 때까지 마찰하여 건조</button>
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'alc-dry-group','mostly')"><span class="dot"></span>대부분 말랐다고 생각될 때까지만 건조</button>
+      <button class="opt-btn check-btn" onclick="selectOpt(this,'alc-dry-group','no')"><span class="dot"></span>마르기 전 바로 장갑 착용</button>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goPage(2)">← 이전</button>
+    <button class="btn btn-primary" onclick="goPage(4)">다음 →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 5: 드레싱 소독제
+════════════════════════════════════════════ -->
+<div class="page" id="page-4">
+  <div class="eyebrow">드레싱</div>
+  <h1 class="page-title">소독제 선택과<br>건조 시간</h1>
+  <p class="page-subtitle">수술 후 드레싱 시 사용하는 소독제와 건조 습관을 확인합니다.</p>
+
+  <div class="card">
+    <div class="card-title"><span class="num">1</span>주로 사용하는 소독제와 건조 시간</div>
+    <p style="font-size:12px;color:var(--gray-600);margin-bottom:16px">사용하는 소독제를 선택하고, 평균 건조 대기 시간을 기재해 주세요</p>
+
+    <!-- 헤더 -->
+    <div style="display:grid;grid-template-columns:28px 1fr 80px 1fr;gap:8px;align-items:center;padding:0 4px 8px;border-bottom:1px solid var(--gray-200);margin-bottom:10px">
+      <div></div>
+      <div style="font-size:11px;font-weight:700;color:var(--gray-600)">소독제</div>
+      <div style="font-size:11px;font-weight:700;color:var(--gray-600);text-align:center">평균 건조시간</div>
+      <div style="font-size:11px;font-weight:700;color:var(--gray-600)">건조 방법</div>
+    </div>
+
+    <!-- 베타딘 행 -->
+    <div class="antiseptic-row" id="row-betadine" style="display:grid;grid-template-columns:28px 1fr 80px 1fr;gap:8px;align-items:center;padding:10px 4px;border-radius:8px;margin-bottom:4px;cursor:pointer" onclick="toggleAntiseptic('betadine')">
+      <div class="anti-check-box" id="chk-betadine" style="width:20px;height:20px;border-radius:4px;border:1.5px solid var(--gray-400);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s"></div>
+      <div style="font-size:13px;font-weight:500;color:var(--gray-800)">10% 포비돈 아이오다인<br><span style="font-size:11px;font-weight:400;color:var(--gray-500)">(베타딘액)</span></div>
+      <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap">
+        <input type="number" id="dry-betadine" min="0" max="30" step="1" placeholder="" onclick="event.stopPropagation()"
+               style="width:40px;padding:6px 4px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;text-align:center;outline:none">
+        <span style="font-size:11px;color:var(--gray-600)">분</span>
+        <input type="number" id="dry-betadine-sec" min="0" max="59" step="1" placeholder="" onclick="event.stopPropagation()"
+               style="width:40px;padding:6px 4px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;text-align:center;outline:none">
+        <span style="font-size:11px;color:var(--gray-600)">초</span>
+      </div>
+      <div>
+        <select id="dry-method-betadine" onclick="event.stopPropagation()"
+                style="width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;color:var(--gray-800);background:var(--white);outline:none">
+          <option value="">선택</option>
+          <option value="full">완전히 마를 때까지</option>
+          <option value="mostly">대부분 마를 때까지</option>
+          <option value="no">마르기 전 바로 진행</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 클로르헥시딘 수용액 행 -->
+    <div class="antiseptic-row" id="row-chx" style="display:grid;grid-template-columns:28px 1fr 80px 1fr;gap:8px;align-items:center;padding:10px 4px;border-radius:8px;margin-bottom:4px;cursor:pointer" onclick="toggleAntiseptic('chx')">
+      <div class="anti-check-box" id="chk-chx" style="width:20px;height:20px;border-radius:4px;border:1.5px solid var(--gray-400);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s"></div>
+      <div style="font-size:13px;font-weight:500;color:var(--gray-800)">0.5% 클로르헥시딘 글루코네이트<br><span style="font-size:11px;font-weight:400;color:var(--gray-500)">(헥시탄 0.5%액)</span></div>
+      <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap">
+        <input type="number" id="dry-chx" min="0" max="30" step="1" placeholder="" onclick="event.stopPropagation()"
+               style="width:40px;padding:6px 4px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;text-align:center;outline:none">
+        <span style="font-size:11px;color:var(--gray-600)">분</span>
+        <input type="number" id="dry-chx-sec" min="0" max="59" step="1" placeholder="" onclick="event.stopPropagation()"
+               style="width:40px;padding:6px 4px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;text-align:center;outline:none">
+        <span style="font-size:11px;color:var(--gray-600)">초</span>
+      </div>
+      <div>
+        <select id="dry-method-chx" onclick="event.stopPropagation()"
+                style="width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;color:var(--gray-800);background:var(--white);outline:none">
+          <option value="">선택</option>
+          <option value="full">완전히 마를 때까지</option>
+          <option value="mostly">대부분 마를 때까지</option>
+          <option value="no">마르기 전 바로 진행</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 클로르헥시딘 알코올 행 -->
+    <div class="antiseptic-row" id="row-chx-alc" style="display:grid;grid-template-columns:28px 1fr 80px 1fr;gap:8px;align-items:center;padding:10px 4px;border-radius:8px;margin-bottom:4px;cursor:pointer" onclick="toggleAntiseptic('chx-alc')">
+      <div class="anti-check-box" id="chk-chx-alc" style="width:20px;height:20px;border-radius:4px;border:1.5px solid var(--gray-400);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s"></div>
+      <div style="font-size:13px;font-weight:500;color:var(--gray-800)">2% 클로르헥시딘 알코올<br><span style="font-size:11px;font-weight:400;color:var(--gray-500)">(헥시-알액 2%)</span></div>
+      <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap">
+        <input type="number" id="dry-chx-alc" min="0" max="30" step="1" placeholder="" onclick="event.stopPropagation()"
+               style="width:40px;padding:6px 4px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;text-align:center;outline:none">
+        <span style="font-size:11px;color:var(--gray-600)">분</span>
+        <input type="number" id="dry-chx-alc-sec" min="0" max="59" step="1" placeholder="" onclick="event.stopPropagation()"
+               style="width:40px;padding:6px 4px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;text-align:center;outline:none">
+        <span style="font-size:11px;color:var(--gray-600)">초</span>
+      </div>
+      <div>
+        <select id="dry-method-chx-alc" onclick="event.stopPropagation()"
+                style="width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;color:var(--gray-800);background:var(--white);outline:none">
+          <option value="">선택</option>
+          <option value="full">완전히 마를 때까지</option>
+          <option value="mostly">대부분 마를 때까지</option>
+          <option value="no">마르기 전 바로 진행</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 모름 행 -->
+    <div class="antiseptic-row" id="row-unknown" style="display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:center;padding:10px 4px;border-radius:8px;cursor:pointer" onclick="toggleAntiseptic('unknown')">
+      <div class="anti-check-box" id="chk-unknown" style="width:20px;height:20px;border-radius:4px;border:1.5px solid var(--gray-400);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s"></div>
+      <div style="font-size:13px;color:var(--gray-600)">사용하는 소독제가 무엇인지 모름</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">2</span>건조될 때까지 기다리지 않는/못하는 경우가 있다면 이유를 자유롭게 기재해 주세요</div>
+    <textarea id="dry-reason" rows="3" placeholder="예: 수술 지연, 시간 부족, 습관적으로 하지 않게 됨 등" style="width:100%;margin-top:6px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-size:13px;resize:vertical;outline:none;color:var(--gray-800);line-height:1.6"></textarea>
+  </div>
+
+  <div style="margin:24px 0 8px;border-top:2px solid var(--teal);padding-top:20px">
+    <div class="eyebrow" style="margin-bottom:4px">드레싱 시 손위생 & 장갑</div>
+    <div style="font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px">드레싱 시 손위생 및 장갑착용</div>
+    <div style="font-size:13px;color:var(--gray-600);margin-bottom:14px">각 드레싱 단계에서 손위생 시행 여부와 멸균장갑 착용 여부를 체크해 주세요.</div>
+  </div>
+
+  <!--
+    드레싱 흐름 체크 (4단계)
+    이미지: images/img_dressing_flow.png (650×1157, 4컷 세로 배열)
+    각 컷 높이 ≈ 289px → CSS object-position으로 crop
+  -->
+  <div style="display:flex;flex-direction:column;gap:0">
+
+    <!-- ① 드레싱 위해 환자 접촉 전 -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="display:flex;align-items:stretch">
+        <!-- 이미지: 컷 1 (y 0~289 / 1157 = 0%~24.97%) -->
+        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
+          <img src="images/img_dressing_flow.png" alt="① 드레싱 위해 환자 접촉 전"
+               style="width:100%;height:160px;object-fit:cover;object-position:center 0%;display:block">
+        </div>
+        <!-- 텍스트+체크박스 -->
+        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">① 드레싱 위해<br>환자 접촉 전</div>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="hh-1"><span class="fc-box"></span>손위생을 한다
+          </label>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="gl-1"><span class="fc-box"></span>장갑을 착용한다
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 화살표 -->
+    <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="width:2px;height:14px;background:var(--teal)"></div>
+        <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal)"></div>
+      </div>
+    </div>
+
+    <!-- ② 기존 드레싱을 제거 하기 전 -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="display:flex;align-items:stretch">
+        <!-- 이미지: 컷 2 (y 289~578 / 1157 → object-position 25%) -->
+        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
+          <img src="images/img_dressing_flow.png" alt="② 기존 드레싱을 제거 하기 전"
+               style="width:100%;height:160px;object-fit:cover;object-position:center 24.97%;display:block">
+        </div>
+        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">② 기존 드레싱을<br>제거 하기 전</div>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="hh-2"><span class="fc-box"></span>손위생을 한다
+          </label>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="gl-2"><span class="fc-box"></span>장갑을 착용한다
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 화살표 -->
+    <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="width:2px;height:14px;background:var(--teal)"></div>
+        <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal)"></div>
+      </div>
+    </div>
+
+    <!-- ③ 새롭게 무균적 드레싱을 시행하기 전 -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="display:flex;align-items:stretch">
+        <!-- 이미지: 컷 3 (y 578~867 / 1157 → object-position 49.96%) -->
+        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
+          <img src="images/img_dressing_flow.png" alt="③ 새롭게 무균적 드레싱을 시행하기 전"
+               style="width:100%;height:160px;object-fit:cover;object-position:center 49.96%;display:block">
+        </div>
+        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">③ 새롭게 무균적<br>드레싱을 시행하기 전</div>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="hh-3"><span class="fc-box"></span>손위생을 한다
+          </label>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="gl-3"><span class="fc-box"></span>멸균 장갑을 착용한다
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 화살표 -->
+    <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="width:2px;height:14px;background:var(--teal)"></div>
+        <div style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--teal)"></div>
+      </div>
+    </div>
+
+    <!-- ④ 드레싱을 한 뒤 환자 침상을 떠나기 전 -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="display:flex;align-items:stretch">
+        <!-- 이미지: 컷 4 (y 867~1157 / 1157 → object-position 100%) -->
+        <div style="flex-shrink:0;width:46%;overflow:hidden;position:relative">
+          <img src="images/img_dressing_flow.png" alt="④ 드레싱을 한 뒤 환자 침상을 떠나기 전"
+               style="width:100%;height:160px;object-fit:cover;object-position:center 100%;display:block">
+        </div>
+        <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--teal);line-height:1.4">④ 드레싱을 한 뒤<br>환자 침상을 떠나기 전</div>
+          <label class="flow-check" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--gray-800)">
+            <input type="checkbox" data-key="hh-4"><span class="fc-box"></span>손위생을 한다
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goPage(3)">← 이전</button>
+    <button class="btn btn-primary" onclick="buildResult()">결과 보기 →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 6: 결과
+════════════════════════════════════════════ -->
+<div class="page" id="page-5">
+  <div class="eyebrow">자가평가 결과</div>
+  <h1 class="page-title" id="result-title">점검 결과와<br>개선 포인트</h1>
+  <p class="page-subtitle" id="result-subtitle" style="margin-bottom:20px"></p>
+
+  <!-- 규칙 기반 피드백 영역 -->
+  <div id="feedback-area" style="margin-bottom:28px"></div>
+
+  <!-- ── 외과적 손소독 영상 ── -->
+  <div style="margin-bottom:28px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="width:4px;height:20px;background:var(--teal);border-radius:2px"></div>
+      <div style="font-size:15px;font-weight:700;color:var(--navy)">올바른 외과적 손소독(핸드럽) 방법</div>
+    </div>
+    <div style="position:relative;width:100%;padding-bottom:56.25%;background:#000;border-radius:12px;overflow:hidden">
+      <iframe
+        src="https://www.youtube.com/embed/o5P-_tLAoFg?si=QxSlN-lwTKIn0gke"
+        title="올바른 외과적 손소독(핸드럽) 방법"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px">
+      </iframe>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <a href="https://youtu.be/o5P-_tLAoFg?si=QxSlN-lwTKIn0gke" target="_blank"
+         style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--teal);text-decoration:none;padding:6px 14px;border:1px solid var(--teal-mid);border-radius:20px;background:var(--teal-light)">
+        ▶ 영상이 재생되지 않으면 여기를 눌러 YouTube에서 보기
+      </a>
+    </div>
+  </div>
+
+  <!-- ── 드레싱 소독제 올바른 사용 ── -->
+  <div style="margin-bottom:28px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="width:4px;height:20px;background:var(--teal);border-radius:2px"></div>
+      <div style="font-size:15px;font-weight:700;color:var(--navy)">드레싱 소독제 올바른 사용</div>
+    </div>
+
+    <!-- 소독제 카드 3종 -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <!-- 포비돈 요오드 -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+        <div style="background:#FFF8EE;padding:12px 16px;border-bottom:1px solid #F5E0C0">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+            <div>
+              <div style="font-size:14px;font-weight:700;color:#7A4010">포비돈 요오드 (Povidone-iodine, PVP-I)</div>
+              <div style="font-size:11px;color:#A0601A;margin-top:2px">Betadine® 등 / 통상 7.5–10% 용액</div>
+            </div>
+            <span style="flex-shrink:0;background:#E07B39;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap">국내 가장 널리 사용</span>
+          </div>
+        </div>
+        <div style="padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">살균 범위</div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <span style="background:#FDECEA;color:#C0392B;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">G+</span>
+                <span style="background:#FDECEA;color:#C0392B;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">G−</span>
+                <span style="background:#FDF0E8;color:#E07B39;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">진균</span>
+                <span style="background:#FDF0E8;color:#E07B39;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">바이러스</span>
+                <span style="background:#FDF0E8;color:#E07B39;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">아포</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">작용 발현</div>
+              <div style="font-size:13px;font-weight:700;color:var(--navy)">30–60초</div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">잔류 효과</div>
+              <div style="font-size:12px;color:#C0392B;font-weight:600">약함 (아이오딘 소모 후 소멸)</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:5px">건조 시간</div>
+            <div style="position:relative;height:8px;background:#F0E8D8;border-radius:4px;margin-bottom:4px">
+              <div style="width:80%;height:100%;background:#E8A04A;border-radius:4px"></div>
+            </div>
+            <div style="font-size:11px;color:#7A4010;font-weight:600;text-align:right">약 2–3분 (완전 발현 기준)</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="font-size:10px;background:#FFF3E0;color:#A0601A;padding:3px 8px;border-radius:6px">⚠ 갑상선 기능에 영향 가능</span>
+            <span style="font-size:10px;background:#FFF3E0;color:#A0601A;padding:3px 8px;border-radius:6px">⚠ 요오드 알레르기 확인 필수</span>
+            <span style="font-size:10px;background:#FFF3E0;color:#A0601A;padding:3px 8px;border-radius:6px">⚠ 신생아·임산부 주의</span>
+            <span style="font-size:10px;background:#FFF3E0;color:#A0601A;padding:3px 8px;border-radius:6px">⚠ 개방창·점막 고농도 주의</span>
+          </div>
+          <div style="background:#FFF8EE;border-left:3px solid #E8A04A;border-radius:0 8px 8px 0;padding:9px 12px;font-size:12px;color:#7A4010;line-height:1.6">
+            유기물(혈액, 분비물)에 의해 살균력이 현저히 감소하므로, 적용 전 상처 세척이 선행되어야 합니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 클로르헥시딘 (CHG) -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+        <div style="background:#EEF8FF;padding:12px 16px;border-bottom:1px solid #C0DFF5">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+            <div>
+              <div style="font-size:14px;font-weight:700;color:#1A4A7A">클로르헥시딘 (Chlorhexidine Gluconate, CHG)</div>
+              <div style="font-size:11px;color:#2A6AAA;margin-top:2px">0.5–4% 수용액 / 알코올 혼합형(CHG+알코올) 포함</div>
+            </div>
+            <span style="flex-shrink:0;background:#2A6AAA;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap">잔류효과 우수</span>
+          </div>
+        </div>
+        <div style="padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">살균 범위</div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <span style="background:#FDECEA;color:#C0392B;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">G+</span>
+                <span style="background:#FDECEA;color:#C0392B;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">G−</span>
+                <span style="background:#EEF8FF;color:#2A6AAA;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">일부 진균</span>
+                <span style="background:#EEF8FF;color:#2A6AAA;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px">일부 바이러스</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">작용 발현</div>
+              <div style="font-size:13px;font-weight:700;color:var(--navy)">15–30초</div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">잔류 효과</div>
+              <div style="font-size:12px;color:#1A7F5A;font-weight:600">6시간 이상 (피부 결합)</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">건조 시간 (단독 수용액)</div>
+              <div style="position:relative;height:8px;background:#DDEEFF;border-radius:4px;margin-bottom:3px">
+                <div style="width:35%;height:100%;background:#2A6AAA;border-radius:4px"></div>
+              </div>
+              <div style="font-size:11px;color:#1A4A7A;font-weight:600;text-align:right">약 1–2분</div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--gray-600);margin-bottom:4px">건조 시간 (CHG+알코올 혼합형)</div>
+              <div style="position:relative;height:8px;background:#DDEEFF;border-radius:4px;margin-bottom:3px">
+                <div style="width:15%;height:100%;background:#5BA3D9;border-radius:4px"></div>
+              </div>
+              <div style="font-size:11px;color:#1A4A7A;font-weight:600;text-align:right">30초–1분</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="font-size:10px;background:#E8F4FF;color:#1A4A7A;padding:3px 8px;border-radius:6px">⚠ 외이도·중이 적용 금지 (이독성)</span>
+            <span style="font-size:10px;background:#E8F4FF;color:#1A4A7A;padding:3px 8px;border-radius:6px">⚠ 눈·뇌·척수 점막 적용 금지</span>
+            <span style="font-size:10px;background:#E8F4FF;color:#1A4A7A;padding:3px 8px;border-radius:6px">⚠ 아포(포자) 효과 없음</span>
+            <span style="font-size:10px;background:#E8F4FF;color:#1A4A7A;padding:3px 8px;border-radius:6px">⚠ 중증 알레르기 반응 보고 사례 있음</span>
+          </div>
+          <div style="background:#EEF8FF;border-left:3px solid #2A6AAA;border-radius:0 8px 8px 0;padding:9px 12px;font-size:12px;color:#1A4A7A;line-height:1.6">
+            WHO 및 CDC SSI 가이드라인에서 수술 전 피부 소독제로 알코올 기반 CHG를 1순위로 권장합니다. 수술 후 상처 소독에도 동일 기준 준용 가능합니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 한눈에 비교 -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+        <div style="background:#F5F5F5;padding:10px 16px;border-bottom:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:700;color:var(--navy)">한눈에 비교</div>
+        </div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:11.5px">
+            <thead>
+              <tr style="background:#FAFAFA">
+                <th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--gray-600);border-bottom:1px solid var(--border)">소독제</th>
+                <th style="padding:8px 10px;text-align:center;font-weight:700;color:var(--gray-600);border-bottom:1px solid var(--border)">살균 범위</th>
+                <th style="padding:8px 10px;text-align:center;font-weight:700;color:var(--gray-600);border-bottom:1px solid var(--border)">잔류 효과</th>
+                <th style="padding:8px 10px;text-align:center;font-weight:700;color:var(--gray-600);border-bottom:1px solid var(--border)">건조 시간</th>
+                <th style="padding:8px 10px;text-align:center;font-weight:700;color:var(--gray-600);border-bottom:1px solid var(--border)">개방창 적용</th>
+                <th style="padding:8px 10px;text-align:center;font-weight:700;color:var(--gray-600);border-bottom:1px solid var(--border)">아포 효과</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #F0F0F0">
+                <td style="padding:8px 10px;font-weight:600;color:#7A4010">포비돈 요오드</td>
+                <td style="padding:8px 10px;text-align:center">광범위</td>
+                <td style="padding:8px 10px;text-align:center;color:#C0392B;font-weight:600">약함</td>
+                <td style="padding:8px 10px;text-align:center">2–3분</td>
+                <td style="padding:8px 10px;text-align:center;color:#1A7F5A;font-weight:600">저농도 가능</td>
+                <td style="padding:8px 10px;text-align:center;color:#1A7F5A;font-weight:600">있음</td>
+              </tr>
+              <tr style="border-bottom:1px solid #F0F0F0">
+                <td style="padding:8px 10px;font-weight:600;color:#1A4A7A">CHG</td>
+                <td style="padding:8px 10px;text-align:center">광범위</td>
+                <td style="padding:8px 10px;text-align:center;color:#1A7F5A;font-weight:600">6시간 이상</td>
+                <td style="padding:8px 10px;text-align:center">1–2분</td>
+                <td style="padding:8px 10px;text-align:center;color:#C0392B;font-weight:600">점막 금기</td>
+                <td style="padding:8px 10px;text-align:center;color:#C0392B;font-weight:600">없음</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 10px;font-weight:600;color:#0A4A2A">알코올</td>
+                <td style="padding:8px 10px;text-align:center">광범위</td>
+                <td style="padding:8px 10px;text-align:center;color:#C0392B;font-weight:600">없음</td>
+                <td style="padding:8px 10px;text-align:center;color:#1A7F5A;font-weight:600">15–30초</td>
+                <td style="padding:8px 10px;text-align:center;color:#C0392B;font-weight:600">금기</td>
+                <td style="padding:8px 10px;text-align:center;color:#C0392B;font-weight:600">없음</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 손배지 실습 신청 ── -->
+  <div style="margin-bottom:28px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:36px;height:36px;background:var(--amber-light);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔬</div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--navy)">손배지 실습 신청</div>
+        <div style="font-size:12px;color:var(--gray-600)">손위생의 효과를 눈으로 직접 확인하는 현장 실습</div>
+      </div>
+    </div>
+
+    <div class="card" style="border-color:var(--amber);background:var(--amber-light);margin-bottom:12px">
+      <div style="font-size:13px;color:#7A4010;line-height:1.7">
+        <strong>손배지 실습이란?</strong><br>
+        손위생 전/후 배지 결과 비교를 통하여 손위생의 효과를 시각적으로 확인해보는 실습입니다. 검사한 배지는 2일간 키운 뒤 결과를 개별로 보내드립니다.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">일정</span>희망 실습 일자 및 시간</div>
+      <p style="font-size:12px;color:var(--gray-600);margin-bottom:14px">가급적 수술장에서 시행 예정으로, 가능한 날짜와 시간을 입력해 주세요</p>
+
+      <div style="display:flex;flex-direction:column;gap:12px" id="badge-dates">
+        <div style="display:flex;align-items:center;gap:8px" id="badge-row-1">
+          <input type="date" id="badge-date-1" style="flex:1">
+          <input type="time" id="badge-time-1" style="width:110px">
+          <button onclick="addDateRow()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);font-size:13px;cursor:pointer;color:var(--teal);white-space:nowrap">+ 추가</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 제출 버튼 -->
+  <div id="submit-section" style="margin-top:20px">
+    <button class="btn btn-primary" onclick="submitAll()" style="width:100%;padding:14px;font-size:15px;border-radius:10px">
+      📤 평가 결과 제출
+    </button>
+    <div style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:8px">
+      제출 후 감염관리실에서 일정을 확인하여 개별 연락드립니다
+    </div>
+  </div>
+
+  <div id="submit-done" style="display:none;background:var(--green-light);border:1px solid #A8D8C0;border-radius:12px;padding:20px 24px;text-align:center;margin-top:20px">
+    <div style="font-size:28px;margin-bottom:8px">✅</div>
+    <div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:6px">제출이 완료되었습니다</div>
+    <div style="font-size:13px;color:var(--gray-600)">감사합니다. 감염관리실에서 개별 연락드립니다.</div>
+  </div>
+
+  <div class="nav-row" style="justify-content:space-between">
+    <button class="btn btn-ghost" onclick="goPage(4)">← 이전</button>
+    <button class="btn btn-ghost" onclick="location.reload()">처음부터 다시</button>
+  </div>
+</div>
+
+</div><!-- end app-shell -->
+
+<script>
+// ── State ──
+const state = {
+  userId: null,
+  dept: null,
+  rank: null,
+  method: null,
+  scrubTime: null,
+  timer: null,
+  dryOrder: null,
+  armZones: {},
+  prewash: [],
+  pumpCount: null,
+  fingertipDip: null,
+  alcDry: null,
+  antiseptic: null,
+  dryCard: null,
+  dryAct: null,
+  beforeHH: [],
+  afterHH: [],
+  glove: null,
+  badgeApply: null,
+  badgePlace: null,
+};
+
+// ── Navigation ──
+function goPage(n) {
+  document.querySelectorAll('.page').forEach((p,i) => p.classList.toggle('active', i===n));
+  const tabs = document.querySelectorAll('.step-tab');
+  tabs.forEach((t,i) => {
+    t.classList.remove('active','done');
+    if(i===n) t.classList.add('active');
+    else if(i<n) t.classList.add('done');
+  });
+  document.getElementById('hdr-step').textContent = (n+1) + ' / 6';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Page 1: 참여자 정보 검증 ──
+function validateAndStart() {
+  const uid = document.getElementById('user-id').value.trim();
+  if(!uid) { alert('사번을 입력해 주세요.'); return; }
+  const deptSel = document.querySelector('#dept-group .opt-btn.selected');
+  if(!deptSel) { alert('소속 과를 선택해 주세요.'); return; }
+  const rankSel = document.querySelector('#rank-group .opt-btn.selected');
+  if(!rankSel) { alert('직급을 선택해 주세요.'); return; }
+  state.userId = uid;
+  state.dept = deptSel.dataset.val || deptSel.textContent.trim();
+  state.rank = rankSel.dataset.val || rankSel.textContent.trim();
+  state.method = 'both'; // 스크럽·알코올럽 모두 평가
+  goPage(2);
+}
+
+// dept other 보이기
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#dept-group .opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const other = document.getElementById('dept-other');
+      other.style.display = btn.dataset.val === 'other' ? 'block' : 'none';
+    });
+  });
+});
+
+function goToHandMethod() {
+  state.method = 'both';
+  goPage(2);
+}
+
+function goBack45() {
+  goPage(4);
+}
+
+// ── (손배지 신청여부 UI 제거됨) ──
+
+// ── 날짜+시간 행 추가 ──
+let dateCount = 1;
+function addDateRow() {
+  if(dateCount >= 3) return;
+  dateCount++;
+  const wrap = document.getElementById('badge-dates');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;align-items:center;gap:8px';
+  div.id = `badge-row-${dateCount}`;
+  div.innerHTML = `<input type="date" id="badge-date-${dateCount}" style="flex:1"><input type="time" id="badge-time-${dateCount}" style="width:110px">`;
+  wrap.appendChild(div);
+}
+
+// ── 전체 제출 ──
+async function submitAll() {
+  const payload = buildPayload();
+  // Google Apps Script 웹앱 URL을 아래에 붙여넣으세요
+  const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+  const btn = document.querySelector('#submit-section button');
+  btn.disabled = true;
+  btn.textContent = '제출 중...';
+
+  if(GAS_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+    // 개발 모드: 콘솔에 출력
+    console.log('제출 데이터:', JSON.stringify(payload, null, 2));
+    showSubmitDone();
+    return;
+  }
+
+  try {
+    await fetch(GAS_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    showSubmitDone();
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '📤 평가 결과 및 실습 신청 제출';
+    alert('제출 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+  }
+}
+
+function showSubmitDone() {
+  document.getElementById('submit-section').style.display = 'none';
+  document.getElementById('submit-done').style.display = 'block';
+}
+
+function buildPayload() {
+  const datesTimes = [];
+  for(let i=1;i<=dateCount;i++){
+    const d = document.getElementById('badge-date-'+i)?.value;
+    const t = document.getElementById('badge-time-'+i)?.value;
+    if(d) datesTimes.push(d + (t ? ' ' + t : ''));
+  }
+  const dryactSel = document.querySelector('#dryact-group .opt-btn.selected');
+  const timerSel = document.querySelector('#timer-group .opt-btn.selected');
+  const dipSel = document.querySelector('#dip-group .opt-btn.selected');
+  const alcSel = document.querySelector('#alc-dry-group .opt-btn.selected');
+
+  return {
+    timestamp: new Date().toISOString(),
+    userId: state.userId,
+    dept: document.getElementById('dept-other')?.value || state.dept,
+    rank: state.rank,
+    handMethod: state.method,
+    scrubMethod: document.querySelector('#scrub-method-group .opt-btn.selected')?.textContent.trim() || '',
+    scrubTime: document.getElementById('scrub-time')?.value || '',
+    scrubTimer: timerSel?.textContent.trim() || '',
+    scrubZones: Object.entries(zoneData).filter(([,v])=>v).map(([k])=>k).join(','),
+    alcoholDip: dipSel?.textContent.trim() || '',
+    alcoholDry: alcSel?.textContent.trim() || '',
+    pumpCount: document.getElementById('pump-count')?.value || '',
+    antiseptic: Object.keys(selectedAntiseptics).filter(k=>selectedAntiseptics[k]).join(','),
+    dryTimeBetadine: document.getElementById('dry-betadine')?.value || '',
+    dryMethodBetadine: document.getElementById('dry-method-betadine')?.value || '',
+    dryTimeChx: document.getElementById('dry-chx')?.value || '',
+    dryMethodChx: document.getElementById('dry-method-chx')?.value || '',
+    dryTimeChxAlc: document.getElementById('dry-chx-alc')?.value || '',
+    dryMethodChxAlc: document.getElementById('dry-method-chx-alc')?.value || '',
+    dryAct: dryactSel?.textContent.trim() || '',
+    dryReason: document.getElementById('dry-reason')?.value || '',
+    dressingFlow: (() => {
+      const keys = ['hh-1','gl-1','hh-2','gl-2','hh-3','gl-3','hh-4'];
+      const labels = {
+        'hh-1':'환자접촉전_손위생','gl-1':'환자접촉전_장갑',
+        'hh-2':'드레싱제거전_손위생','gl-2':'드레싱제거전_장갑',
+        'hh-3':'무균드레싱전_손위생','gl-3':'무균드레싱전_멸균장갑',
+        'hh-4':'침상이탈전_손위생',
+      };
+      const result = {};
+      keys.forEach(k => {
+        const el = document.querySelector(`input[data-key="${k}"]`);
+        result[labels[k]] = el ? el.checked : false;
+      });
+      return JSON.stringify(result);
+    })(),
+    badgeDatesTimes: datesTimes.join(' / '),
+  };
+}
+
+// ── Single-select options ──
+function selectOpt(el, groupId, val) {
+  document.querySelectorAll('#'+groupId+' .opt-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  state[groupId.replace('-group','')] = val;
+}
+
+// ── Multi-select (prewash) ──
+function toggleMulti(el) {
+  el.classList.toggle('selected');
+}
+
+// ── Arm zone toggle ──
+const zoneData = {};
+function toggleZone(el, key) {
+  el.classList.toggle('checked');
+  zoneData[key] = el.classList.contains('checked');
+  const box = el.querySelector('.zone-box');
+  box.textContent = zoneData[key] ? '✓' : '';
+  const ov = document.getElementById('ov-' + key);
+  if (ov) {
+    ov.setAttribute('fill', zoneData[key] ? 'rgba(27,127,121,0.45)' : 'rgba(0,0,0,0)');
+    ov.setAttribute('stroke', zoneData[key] ? '#1B7F79' : 'rgba(255,255,255,0.15)');
+    ov.setAttribute('stroke-width', zoneData[key] ? '2' : '1');
+  }
+}
+
+// ── 타이머 미사용 시 이유 카드 표시 ──
+function toggleTimerReason(show) {
+  const reasonCard = document.getElementById('timer-reason-card');
+  const methodCard = document.getElementById('timer-reason-card-show');
+  if (reasonCard) reasonCard.style.display = show ? 'block' : 'none';
+  if (methodCard) methodCard.style.display = show ? 'none' : 'block';
+}
+// 타이머 선택 시 이유 카드만 토글
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#timer-group .opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleTimerReason(btn.dataset.val === 'no');
+    });
+  });
+});
+const selectedAntiseptics = {};
+function toggleAntiseptic(key) {
+  selectedAntiseptics[key] = !selectedAntiseptics[key];
+  const box = document.getElementById('chk-' + key);
+  const row = document.getElementById('row-' + key);
+  if (selectedAntiseptics[key]) {
+    box.style.background = 'var(--teal)';
+    box.style.borderColor = 'var(--teal)';
+    box.innerHTML = '<span style="color:#fff;font-size:12px;font-weight:700">✓</span>';
+    row.style.background = 'var(--teal-light)';
+  } else {
+    box.style.background = 'var(--white)';
+    box.style.borderColor = 'var(--gray-400)';
+    box.innerHTML = '';
+    row.style.background = 'var(--white)';
+  }
+}
+
+
+function toggleMoment(el) {
+  el.classList.toggle('selected');
+}
+
+// ── Dry card select ──
+function selectDryCard(el, type) {
+  document.querySelectorAll('.dry-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  state.dryCard = type;
+}
+
+// ── Build result ──
+function buildResult() {
+  if (!state.method) state.method = 'both'; // 안전장치
+  state.scrubTime = parseFloat(document.getElementById('scrub-time')?.value) || null;
+  state.pumpCount = parseInt(document.getElementById('pump-count')?.value) || null;
+  goPage(5);
+  renderFeedback();
+}
+
+// ── 규칙 기반 피드백 ──
+function renderFeedback() {
+  const items = [];
+  const method = state.method;
+
+  // ────────────────────────────
+  // 1. 스크럽
+  // ────────────────────────────
+  if (method === 'scrub' || method === 'both') {
+    const scrubTime = state.scrubTime;
+
+    // 소요 시간
+    if (!scrubTime || scrubTime < 2) {
+      items.push({type:'bad', domain:'스크럽', title:'스크럽 소요 시간 부족',
+        desc: scrubTime ? `현재 평균 ${scrubTime}분으로 권고 기준(2분 이상)에 미치지 못합니다.` : '스크럽 소요 시간이 입력되지 않았습니다.',
+        fix:'스크럽 시 문지르는 시간만 총 2분 이상 시행되어야 합니다. 시간 준수를 위해 도구(비접촉 타이머 또는 모래시계)를 활용하여 주세요.',
+        ref:'WHO SSI Prevention Guideline 2018'});
+    } else {
+      items.push({type:'good', domain:'스크럽', title:'스크럽 소요 시간 적절',
+        desc:`평균 ${scrubTime}분으로 권고 기준을 충족합니다.`,
+        fix:'', ref:'WHO SSI Prevention Guideline 2018'});
+    }
+
+    // 시행 범위 — elbow-above 포함 전 부위 체크
+    const required = ['finger','palm','wrist','forearm-lower','forearm-upper','elbow','elbow-above'];
+    const missing = required.filter(z => !zoneData[z]);
+    if (missing.length > 0) {
+      const labelMap = {
+        'finger':'손가락 사이·끝', 'palm':'손바닥·손등', 'wrist':'손목',
+        'forearm-lower':'전완 하부', 'forearm-upper':'전완 상부',
+        'elbow':'팔꿈치', 'elbow-above':'팔꿈치 위 5cm'
+      };
+      items.push({type:'bad', domain:'스크럽', title:'스크럽 시행 범위 누락',
+        desc:`미체크 부위: ${missing.map(k=>labelMap[k]).join(', ')}`,
+        fix:'손끝부터 팔꿈치 위 5cm까지 모든 부위를 다 닦아내야 합니다. 누락되는 부분이 없도록 모두 닦아내 주세요.',
+        ref:'WHO SSI Prevention Guideline 2018'});
+    } else {
+      items.push({type:'good', domain:'스크럽', title:'스크럽 시행 범위 충분',
+        desc:'손끝부터 팔꿈치 위 5cm까지 전 범위를 세척하고 있습니다.',
+        fix:'', ref:'WHO SSI Prevention Guideline 2018'});
+    }
+  }
+
+  // ────────────────────────────
+  // 2. 알코올럽
+  // ────────────────────────────
+  if (method === 'rub' || method === 'both') {
+
+    // 물로 씻어내야 하는 시점 — first + contaminated 둘 다 선택했는지
+    const prewashBtns = document.querySelectorAll('#prewash-group .opt-btn.selected');
+    const prewashVals = [...prewashBtns].map(b => b.dataset.val);
+    const prewashOk = prewashVals.includes('first') && prewashVals.includes('contaminated');
+    if (!prewashOk) {
+      items.push({type:'bad', domain:'알코올럽', title:'물로 씻어내야 하는 시점 미인지',
+        desc:'첫 번째 수술 시작 전과 손에 오염물이 있는 경우, 두 가지를 모두 인지해야 합니다.',
+        fix:'손에 유기물이 있는 경우에는 소독 효과가 떨어집니다. 따라서 첫 수술 전, 손에 오염물이 있는 경우에는 물로 손위생을 시행한 뒤 외과적 알코올럽 과정을 시행하여 주세요.',
+        ref:'WHO Hand Hygiene Guideline 2009'});
+    } else {
+      items.push({type:'good', domain:'알코올럽', title:'물로 씻어내야 하는 시점 정확히 인지',
+        desc:'첫 수술 전과 오염 시 물 세척 후 알코올럽을 적용하는 기준을 정확히 알고 있습니다.',
+        fix:'', ref:'WHO Hand Hygiene Guideline 2009'});
+    }
+
+    // 펌핑 횟수
+    const pump = state.pumpCount;
+    if (!pump || pump < 3) {
+      items.push({type:'bad', domain:'알코올럽', title:'펌핑 횟수 부족',
+        desc: pump ? `현재 ${pump}회로 권고 기준(3회 이상)에 미치지 못합니다.` : '펌핑 횟수가 입력되지 않았습니다.',
+        fix:'한쪽 손끝부터 팔꿈치 위 5cm까지 양쪽 팔에 각각 1회씩 펌프, 마지막에 손의 모든 표면을 소독하기 위해서 최소 3번의 펌프가 필요합니다. 자세한 과정은 아래 영상을 참고하여 주세요!',
+        ref:'EN 12791 / WHO Hand Hygiene Guideline'});
+    } else {
+      items.push({type:'good', domain:'알코올럽', title:'펌핑 횟수 적절',
+        desc:`${pump}회로 권고 기준을 충족합니다.`,
+        fix:'', ref:'EN 12791 / WHO Hand Hygiene Guideline'});
+    }
+
+    // 손끝 담그기
+    const dipSel = document.querySelector('#dip-group .opt-btn.selected');
+    if (!dipSel || dipSel.dataset.val !== 'yes') {
+      items.push({type:'bad', domain:'알코올럽', title:'손끝 담그기 미시행',
+        desc:'손끝 담그기(fingertip dipping)를 시행하지 않고 있습니다.',
+        fix:'수술은 손끝을 이용하는 세밀한 조작이 많기 때문에 소독제를 펌핑한 직후 꼭 손끝을 먼저 소독하여 주세요.',
+        ref:'EN 12791 / WHO Hand Hygiene Guideline'});
+    } else {
+      items.push({type:'good', domain:'알코올럽', title:'손끝 담그기 시행',
+        desc:'Fingertip dipping을 시행하고 있습니다.',
+        fix:'', ref:'EN 12791 / WHO Hand Hygiene Guideline'});
+    }
+
+    // 건조
+    const alcSel = document.querySelector('#alc-dry-group .opt-btn.selected');
+    if (!alcSel || alcSel.dataset.val !== 'full') {
+      items.push({type:'bad', domain:'알코올럽', title:'건조 방법 부적절',
+        desc: alcSel?.dataset.val === 'no' ? '마르기 전 바로 장갑을 착용하고 있습니다.'
+             : alcSel?.dataset.val === 'mostly' ? '대부분 마를 때까지만 건조하고 있습니다.'
+             : '건조 방법이 선택되지 않았습니다.',
+        fix:'소독제는 완전히 마를 때까지 건조하여야 효과가 있습니다. 꼭 마를 때까지 마찰하여 건조한 뒤 장갑을 착용하여 주세요.',
+        ref:'WHO Hand Hygiene Guideline 2009'});
+    } else {
+      items.push({type:'good', domain:'알코올럽', title:'건조 방법 적절',
+        desc:'완전히 마를 때까지 마찰 건조하고 있습니다.',
+        fix:'', ref:'WHO Hand Hygiene Guideline 2009'});
+    }
+  }
+
+  // ────────────────────────────
+  // 3. 드레싱 — 소독제 건조
+  // ────────────────────────────
+  const antSelected = Object.keys(selectedAntiseptics).filter(k => selectedAntiseptics[k] && k !== 'unknown');
+  let dressingAntisepticBad = false;
+
+  if (selectedAntiseptics['unknown']) {
+    dressingAntisepticBad = true;
+  }
+
+  // 선택된 각 소독제의 건조방법이 '마르기 전 바로 시행'인지 확인
+  const dryMethodMap = {
+    'betadine':  document.querySelector('#dry-method-betadine-group .opt-btn.selected')?.dataset.val,
+    'chx':       document.querySelector('#dry-method-chx-group .opt-btn.selected')?.dataset.val,
+    'chx-alc':   document.querySelector('#dry-method-chx-alc-group .opt-btn.selected')?.dataset.val,
+  };
+  antSelected.forEach(k => {
+    if (dryMethodMap[k] === 'no') dressingAntisepticBad = true;
+  });
+
+  if (dressingAntisepticBad) {
+    items.push({type:'bad', domain:'드레싱', title:'소독제 건조 방법 개선 필요',
+      desc:'소독제를 완전히 건조하지 않거나 사용 소독제를 파악하지 못하고 있습니다.',
+      fix:'각 소독제별 특징과 건조 시간을 확인하여 상황에 맞게 사용하여 주세요. (아래 표 참고)',
+      ref:'CDC SSI Prevention Guideline 2017'});
+  } else if (antSelected.length > 0) {
+    items.push({type:'good', domain:'드레싱', title:'소독제 건조 방법 적절',
+      desc:'선택한 소독제를 충분히 건조 후 적용하고 있습니다.',
+      fix:'', ref:'CDC SSI Prevention Guideline 2017'});
+  }
+
+  // ────────────────────────────
+  // 4. 드레싱 — 손위생·장갑
+  // ────────────────────────────
+  // 보완 기준: ①손위생, ③손위생+멸균장갑, ④손위생 중 하나라도 미체크
+  const critical = [
+    {key:'hh-1', label:'① 환자 접촉 전 손위생'},
+    {key:'hh-3', label:'③ 무균 드레싱 전 손위생'},
+    {key:'gl-3', label:'③ 무균 드레싱 전 멸균장갑'},
+    {key:'hh-4', label:'④ 침상 떠나기 전 손위생'},
+  ];
+  const missedCritical = critical.filter(c => !document.querySelector(`input[data-key="${c.key}"]`)?.checked);
+
+  if (missedCritical.length > 0) {
+    items.push({type:'bad', domain:'드레싱', title:'드레싱 시 손위생·장갑 착용 누락',
+      desc:`미시행 항목: ${missedCritical.map(c=>c.label).join(', ')}`,
+      fix:'무균적 드레싱을 위해서는 새롭게 무균적 드레싱을 시행하기 전 손위생과 멸균장갑 착용이 필요합니다.\n환자 접촉 전 손위생 → 기존 드레싱 제거 → 손위생 및 멸균장갑 착용 → 새로운 드레싱 시행 → 침상을 떠나기 전 장갑 벗고 손위생을 시행해 주세요.',
+      ref:'WHO 5 Moments for Hand Hygiene'});
+  } else {
+    items.push({type:'good', domain:'드레싱', title:'드레싱 시 손위생·장갑 착용 준수',
+      desc:'핵심 시점에서 손위생과 멸균장갑을 모두 시행하고 있습니다.',
+      fix:'', ref:'WHO 5 Moments for Hand Hygiene'});
+  }
+
+  // ────────────────────────────
+  // 렌더링 — 탭별로 분리
+  // ────────────────────────────
+  const userId = state.userId || '선생님';
+  const bad  = items.filter(i => i.type === 'bad');
+  const warn = items.filter(i => i.type === 'warn');
+  const good = items.filter(i => i.type === 'good');
+
+  let titleText, subText;
+  if (bad.length > 0 || warn.length > 0) {
+    titleText = `${userId} 선생님,\n조금만 보완하면 감염으로부터\n보다 안전한 술기를 수행하실 수 있습니다.`;
+    subText = `보완이 필요한 항목 ${bad.length}건${warn.length>0?`, 개선 권고 ${warn.length}건`:''}이 확인되었습니다.`;
+  } else {
+    titleText = '전반적으로 잘 지키고 있습니다!';
+    subText = '모든 항목이 권고 기준을 충족합니다. 지금처럼 유지해 주세요.';
+  }
+  document.getElementById('result-title').textContent = titleText;
+  document.getElementById('result-subtitle').textContent = subText;
+
+  const tabs = [
+    { key:'스크럽',   label:'외과적 손소독\n(스크럽)',   icon:'🧴' },
+    { key:'알코올럽', label:'외과적 손소독\n(알코올럽)', icon:'💧' },
+    { key:'드레싱',   label:'드레싱',                   icon:'🩹' },
+  ];
+
+  function tabItems(key) { return items.filter(i => i.domain === key); }
+
+  function itemHTML(item) {
+    const cfg = {
+      good: {color:'#1A7F5A', bg:'#E6F5EF', border:'#A8D8C0', icon:'✅'},
+      warn: {color:'#E07B39', bg:'#FDF0E8', border:'#F5C9A5', icon:'⚠️'},
+      bad:  {color:'#C0392B', bg:'#FDECEA', border:'#F5B7B1', icon:'🔴'},
+    }[item.type];
+    // fix에 줄바꿈 있으면 <br>로 변환
+    const fixHTML = item.fix ? item.fix.replace(/\n/g, '<br>') : '';
+    return `
+      <div style="background:${cfg.bg};border:1px solid ${cfg.border};border-radius:10px;padding:14px 16px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <span style="font-size:13px">${cfg.icon}</span>
+          <span style="font-size:13px;font-weight:700;color:${cfg.color}">${item.title}</span>
+        </div>
+        ${item.desc ? `<div style="font-size:12px;color:var(--gray-800);line-height:1.7;margin-bottom:${fixHTML?'8px':'0'}">${item.desc}</div>` : ''}
+        ${fixHTML ? `
+          <div style="background:rgba(255,255,255,0.75);border-left:3px solid ${cfg.color};border-radius:0 6px 6px 0;padding:8px 10px;margin-top:4px">
+            <div style="font-size:10px;font-weight:700;color:${cfg.color};margin-bottom:3px;letter-spacing:.04em">개선하면 좋을 사항</div>
+            <div style="font-size:12px;color:var(--gray-800);line-height:1.7">${fixHTML}</div>
+          </div>` : ''}
+        ${item.ref ? `<div style="font-size:10px;color:${cfg.color};margin-top:8px;opacity:.7">근거: ${item.ref}</div>` : ''}
+      </div>`;
+  }
+
+  function tabContentHTML(key) {
+    const list = tabItems(key);
+    if (list.length === 0) {
+      if ((key==='스크럽' && method==='rub') || (key==='알코올럽' && method==='scrub'))
+        return `<div style="padding:24px 0;text-align:center;color:var(--gray-400);font-size:13px">이번 평가에서 선택하지 않은 항목입니다.</div>`;
+      return `<div style="padding:24px 0;text-align:center;color:var(--gray-400);font-size:13px">해당 항목이 없습니다.</div>`;
+    }
+    const badL  = list.filter(i=>i.type==='bad');
+    const warnL = list.filter(i=>i.type==='warn');
+    const goodL = list.filter(i=>i.type==='good');
+    let html = '';
+    if (badL.length)  html += `<div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:.05em;margin:0 0 8px">🔴 보완 필요 (${badL.length}건)</div>${badL.map(itemHTML).join('')}`;
+    if (warnL.length) html += `<div style="font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.05em;margin:${badL.length?'14px':0} 0 8px">⚠️ 개선 권고 (${warnL.length}건)</div>${warnL.map(itemHTML).join('')}`;
+    if (goodL.length) html += `<div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:.05em;margin:${(badL.length||warnL.length)?'14px':0} 0 8px">✅ 잘 지키고 있는 사항 (${goodL.length}건)</div>${goodL.map(itemHTML).join('')}`;
+    return html;
+  }
+
+  function badgeCount(key) {
+    const n = tabItems(key).filter(i=>i.type==='bad'||i.type==='warn').length;
+    return n>0 ? `<span style="display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:8px;margin-left:4px">${n}</span>` : '';
+  }
+
+  const tabsHTML = `
+    <div style="margin-bottom:20px">
+      <div id="result-tabs" style="display:flex;border-bottom:2px solid var(--border);margin-bottom:16px;gap:0">
+        ${tabs.map((t,i) => `
+          <button onclick="switchResultTab(${i})" id="rtab-${i}"
+            style="flex:1;padding:10px 6px 11px;background:none;border:none;border-bottom:2px solid transparent;
+                   font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:600;
+                   color:var(--gray-400);cursor:pointer;text-align:center;line-height:1.4;
+                   margin-bottom:-2px;transition:all .15s;white-space:pre-line">
+            <span style="font-size:15px;display:block;margin-bottom:2px">${t.icon}</span>${t.label}${badgeCount(t.key)}
+          </button>`).join('')}
+      </div>
+      ${tabs.map((t,i) => `
+        <div id="rtab-content-${i}" style="display:${i===0?'block':'none'}">
+          ${tabContentHTML(t.key)}
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('feedback-area').innerHTML = tabsHTML;
+  switchResultTab(0);
+}
+
+function switchResultTab(idx) {
+  const tabs = document.querySelectorAll('[id^="rtab-"]:not([id*="content"])');
+  const contents = document.querySelectorAll('[id^="rtab-content-"]');
+  tabs.forEach((t, i) => {
+    const active = i === idx;
+    t.style.color = active ? 'var(--teal)' : 'var(--gray-400)';
+    t.style.borderBottomColor = active ? 'var(--teal)' : 'transparent';
+    t.style.fontWeight = active ? '700' : '600';
+  });
+  contents.forEach((c, i) => {
+    c.style.display = i === idx ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
